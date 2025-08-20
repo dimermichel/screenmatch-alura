@@ -1,24 +1,13 @@
 package com.michelmaia.screenmach;
 
-import com.michelmaia.screenmach.model.Series;
-import com.michelmaia.screenmach.service.CallAPI;
-import com.michelmaia.screenmach.service.DataConverter;
+import com.michelmaia.screenmach.principal.Principal;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
-import java.util.Scanner;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 @SpringBootApplication
 public class ScreenmachApplication implements CommandLineRunner {
-
-    private static final Logger LOGGER = Logger.getLogger(ScreenmachApplication.class.getName());
-    private static final String API_URL = "https://www.omdbapi.com/?t=";
 
     @Value("${omdb.api.key}")
     private String apiKey;
@@ -29,38 +18,37 @@ public class ScreenmachApplication implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        Scanner scanner = new Scanner(System.in);
-        try {
-            var callAPI = new CallAPI();
-            LOGGER.info("Starting Screenmach Application...");
-            LOGGER.info("Please enter the series title (default: 'Game of Thrones'): ");
-            var title = scanner.nextLine();
+        Principal principal = new Principal();
+        principal.showMenu(apiKey);
 
-            if (title.isEmpty()) {
-                LOGGER.warning("Title cannot be empty. Using default: 'Game of Thrones'");
-                title = "Game of Thrones";
-            } else {
-                LOGGER.info("Searching for series: " + title);
-            }
-
-            scanner.close();
-            var encodedTitle = URLEncoder.encode(title, StandardCharsets.UTF_8);
-            var json = callAPI.getData(API_URL + encodedTitle + "&apikey=" + apiKey);
-            
-            if (LOGGER.isLoggable(Level.INFO)) {
-                LOGGER.info("API Response received");
-            }
-            
-            DataConverter converter = new DataConverter();
-            Series series = converter.getData(json, Series.class);
-            
-            if (LOGGER.isLoggable(Level.INFO)) {
-                LOGGER.info("Series data: " + series.toString());
-            }
-            
-        } catch (Exception e) {
-            LOGGER.log(Level.SEVERE, "Error processing series data", e);
-            throw e;
+        /*
+        LOGGER.info("Insert a season number to get more details (1 to " + series.seasons() + "): ");
+        var seasonInput = scanner.nextLine();
+        if (seasonInput.isEmpty() || Integer.parseInt(seasonInput) < 1 || Integer.parseInt(seasonInput) > Integer.parseInt(series.seasons())) {
+            seasonInput = "1";
+            LOGGER.warning("Season cannot be empty or greater than " + series.seasons() + ". Using default: 1");
         }
+
+        var seasonJson = callAPI.getData(API_URL + encodedTitle + "&Season=" + seasonInput + "&apikey=" + apiKey);
+        Season season = converter.getData(seasonJson, Season.class);
+        if (LOGGER.isLoggable(Level.INFO)) {
+            LOGGER.info("Season data: " + season.toString());
+        }
+
+        LOGGER.info("Insert a episode number to get more details (1 to " + season.episodes().size() + "): ");
+        var episodeInput = scanner.nextLine();
+        if (episodeInput.isEmpty() || Integer.parseInt(episodeInput) < 1 || Integer.parseInt(episodeInput) > season.episodes().size()) {
+            episodeInput = "1";
+            LOGGER.warning("Episode cannot be empty or greater than "+ season.episodes().size() + ". Using default: 1");
+        }
+
+        var episodeJson = callAPI.getData(API_URL + encodedTitle + "&Season=" + seasonInput + "&Episode=" + episodeInput + "&apikey=" + apiKey);
+        if (LOGGER.isLoggable(Level.INFO)) {
+            LOGGER.info("API Response received");
+        }
+        Episode episode = converter.getData(episodeJson, Episode.class);
+        LOGGER.info("Episode data: " + episode.toString());
+         */
+
     }
 }
