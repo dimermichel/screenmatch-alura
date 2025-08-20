@@ -56,8 +56,6 @@ public class Principal {
                 seasons.add(season);
             }
 
-//            seasons.forEach(season -> LOGGER.info("Season data: " + season.toString()));
-
             seasons.forEach(season -> {
                         LOGGER.info("Season: " + season.season());
                         season.episodeDTOS().forEach(episodeDTO -> {
