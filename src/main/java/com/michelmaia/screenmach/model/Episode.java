@@ -1,16 +1,27 @@
 package com.michelmaia.screenmach.model;
 
+import jakarta.persistence.*;
+
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.time.format.FormatStyle;
 
+@Entity
+@Table(name = "episodes")
 public class Episode {
+   @Id
+   @GeneratedValue(strategy = GenerationType.IDENTITY)
+   private Long id;
+
    private String title;
    private Integer season;
    private Integer episode;
    private Double rating;
    private LocalDate released;
+
+   @ManyToOne
+   private Serie serie;
 
     public Episode(Integer season, EpisodeDTO episodeDTO) {
         this.season = season;
@@ -28,6 +39,23 @@ public class Episode {
         }
     }
 
+    public Episode() {}
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Serie getSerie() {
+        return serie;
+    }
+
+    public void setSerie(Serie serie) {
+        this.serie = serie;
+    }
 
     public String getTitle() {
         return title;
